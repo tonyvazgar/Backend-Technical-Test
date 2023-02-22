@@ -89,12 +89,12 @@ func (s *Service) SaveProduct(ctx context.Context, dto *ProductDTO) error {
 	return nil
 }
 
-//encore:api public method=POST path=/product/delete/:uuid
-func (s *Service) DeleteProduct(ctx context.Context, uuid string) error {
+//encore:api public method=POST path=/product/delete
+func (s *Service) DeleteProduct(ctx context.Context, data *ProductDeleteDTO) error {
 
 	context.Background()
 
-	err := s.repository.Delete(uuid)
+	err := s.repository.Delete(data.UUID)
 	if err != nil {
 		return err
 	}

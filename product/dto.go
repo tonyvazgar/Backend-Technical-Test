@@ -10,7 +10,7 @@ type ProductDAO struct {
 }
 
 type ProductDTO struct {
-	// UUID         string  `json:"UUID"`
+	UUID         string `json:"UUID"`
 	SKU          string `json:"product_sku"`
 	Name         string `json:"product_name"`
 	Price        int32  `json:"product_price"`
@@ -18,8 +18,13 @@ type ProductDTO struct {
 	QueryCounter int32  `json:"query_counter"`
 }
 
+type ProductDeleteDTO struct {
+	UUID string `json:"uuid"`
+}
+
 func toProductDTO(data *Product) *ProductDTO {
 	return &ProductDTO{
+		UUID:         data.UUID,
 		SKU:          data.SKU,
 		Name:         data.Name,
 		Price:        data.Price,
