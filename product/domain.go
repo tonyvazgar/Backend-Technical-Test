@@ -28,7 +28,7 @@ func (product *Product) toInterface() map[string]interface{} {
 func generateProductToSave(dto *ProductDTO) *Product {
 	counter := 0
 	myUUID := uuid.New()
-	counterViewToInsert := &Product{
+	productToInsert := &Product{
 		UUID:         myUUID.String(),
 		SKU:          dto.SKU,
 		Name:         dto.Name,
@@ -36,7 +36,7 @@ func generateProductToSave(dto *ProductDTO) *Product {
 		Brand:        dto.Brand,
 		QueryCounter: int32(counter),
 	}
-	return counterViewToInsert
+	return productToInsert
 }
 func newProductFromMap(data map[string]interface{}) *Product {
 

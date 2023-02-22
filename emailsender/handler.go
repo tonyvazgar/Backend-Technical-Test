@@ -86,3 +86,22 @@ func (s *Service) sendEmail(ctx context.Context, data *TemplateParams) error {
 
 	return nil
 }
+
+//encore:api public method=POST path=/emailsender/send/admin
+func (s *Service) sendEmaiAllAdmins(ctx context.Context, data *ListEmails) error {
+
+	// res, err := client.Get(urlSendEmail).QueryStruct(params).Receive(responseData, responseError)
+
+	for i := 0; i < len(data.Emails); i++ {
+		value := data.Emails[i]
+		templateParams := TemplateParams{
+			ToName:   value.ToName,
+			FromName: "Tony",
+			Message:  "Hola, informamos que uno de los productos fue actualizado por otro admin, verificalo.",
+			UserMail: value.UserMail,
+		}
+		sendEmail(ctx, &templateParams)
+	}
+
+	return nil
+}

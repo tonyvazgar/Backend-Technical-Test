@@ -7,6 +7,15 @@ type TemplateParams struct {
 	UserMail string `json:"userMail"`
 }
 
+type ParamsListEmail struct {
+	ToName   string `json:"to_name"`
+	UserMail string `json:"userMail"`
+}
+
+type ListEmails struct {
+	Emails []ParamsListEmail `json:"emails"`
+}
+
 type FieldsSendEmail struct {
 	UserID         string         `json:"user_id"`
 	ServiceID      string         `json:"service_id"`

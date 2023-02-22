@@ -70,9 +70,9 @@ func (s *Service) SaveProduct(ctx context.Context, dto *ProductDTO) error {
 
 	context.Background()
 
-	counterViewToInsert := generateProductToSave(dto)
+	productToInsert := generateProductToSave(dto)
 
-	err = s.repository.Save(counterViewToInsert)
+	err = s.repository.Save(productToInsert)
 
 	if err != nil {
 		return handleAPIErrors(err)
