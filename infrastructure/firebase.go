@@ -52,8 +52,7 @@ func InitFirebase() (*firestore.Client, error) {
 		AuthProvider: secrets.AuthProvider,
 		Client:       secrets.Client,
 	}
-	fmt.Println("--------")
-	fmt.Println(cred)
+
 	b, err := json.Marshal(cred)
 	if err != nil {
 		return nil, err

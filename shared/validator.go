@@ -1,8 +1,9 @@
 package shared
 
 import (
-	"encore.dev/beta/errs"
 	"fmt"
+
+	"encore.dev/beta/errs"
 	"github.com/go-playground/validator/v10"
 )
 
