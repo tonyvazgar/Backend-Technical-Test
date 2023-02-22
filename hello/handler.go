@@ -72,12 +72,6 @@ func (s *Service) GetViewsFromProduct(ctx context.Context, productId string) (*T
 	return cntvw[len(cntvw)-1], nil
 }
 
-//encore:api public method=POST path=/test
-func (s *Service) SaveProduct(ctx context.Context, dto *createCounterViewStoreDTO) error {
-
-	return nil
-}
-
 func handleAPIErrors(err error) error {
 	switch err {
 	case ErrCounterViewNotFound:
