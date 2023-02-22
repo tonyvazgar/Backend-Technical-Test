@@ -54,7 +54,7 @@ func initService() (*Service, error) {
 }
 
 //encore:api public method=GET path=/emailsender/send
-func (s *Service) getPhotosFromInstagramCarrouselPostInfo(ctx context.Context, data *TemplateParams) error {
+func (s *Service) sendEmail(ctx context.Context, data *TemplateParams) error {
 
 	client := s.sling.sling.New()
 

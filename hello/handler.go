@@ -56,7 +56,7 @@ type ViewProductDTO struct {
 type createCounterViewStoreDTO struct {
 }
 
-//encore:api public method=GET path=/product/:productId
+//encore:api public method=GET path=/test/:productId
 func (s *Service) GetViewsFromProduct(ctx context.Context, productId string) (*TestDAO, error) {
 
 	cntvw, err := s.repository.GetByProductID(productId)
@@ -72,7 +72,7 @@ func (s *Service) GetViewsFromProduct(ctx context.Context, productId string) (*T
 	return cntvw[len(cntvw)-1], nil
 }
 
-//encore:api public method=POST path=/product
+//encore:api public method=POST path=/test
 func (s *Service) SaveProduct(ctx context.Context, dto *createCounterViewStoreDTO) error {
 
 	return nil
