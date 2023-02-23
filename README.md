@@ -30,6 +30,9 @@ EmailJs: Service that allows send emails easy
 I decided such technologies because it is what I have been working on for a month and it is fresh in my mind. I like it because my learning curve is low (a month ago I knew NOTHING about Go and Encore, NOTHING 🤯).
 
 ## INFO
+
+![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/microservices.png)
+It consists on 3 microservices that encapsulates each behaviour and product/user sends through email service an email
 ![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.35%20p.m..png)
 ![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.43%20p.m..png)
 ![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.51%20p.m..png)
