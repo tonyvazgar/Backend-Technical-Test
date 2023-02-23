@@ -25,7 +25,7 @@ func (product *Product) toInterface() map[string]interface{} {
 		"query_counter": product.QueryCounter,
 	}
 }
-func generateProductToSave(dto *ProductDTO) *Product {
+func generateProductToSave(dto *ProductSaveDTO) *Product {
 	counter := 0
 	myUUID := uuid.New()
 	productToInsert := &Product{

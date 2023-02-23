@@ -3,8 +3,10 @@ package product
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"cloud.google.com/go/firestore"
+	user "encore.app/user"
 	"google.golang.org/api/iterator"
 )
 
@@ -66,6 +68,67 @@ func (r *repository) GetProductBySKU(productSKU string) (*Product, error) {
 	}
 
 	return &product, nil
+}
+
+func (r *repository) GetAllProducts() ([]*Product, error) {
+	ctx := context.Background()
+	const whereKey = "user_id" // Using userID as it comes from the legacy tables
+	var (
+		products   []*Product
+		product    *Product
+		productDAO *ProductDAO
+	)
+	iter := r.FirestoreClient.Collection(collectionName).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+
+		if err = doc.DataTo(&productDAO); err != nil {
+			return nil, err
+		}
+
+		product = &Product{
+			Name:         productDAO.Name,
+			Price:        productDAO.Price,
+			UUID:         productDAO.UUID,
+			SKU:          productDAO.SKU,
+			Brand:        productDAO.Brand,
+			QueryCounter: productDAO.QueryCounter,
+		}
+
+		products = append(products, product)
+	}
+
+	if products == nil {
+		return nil, ErrProductNotFound
+	}
+
+	return products, nil
+}
+
+func (r *repository) GetRoleUser(email string) (*user.UserRole, error) {
+	ctx := context.Background()
+
+	var (
+		userDAO *user.UserRoleDAO
+	)
+	const whereKey = "user_email"
+
+	fmt.Println("//////", whereKey, "==", email)
+	iter := r.FirestoreClient.Collection(user.CollectionName).Where(whereKey, "==", email).Documents(ctx)
+	doc, err := iter.Next()
+	if err == iterator.Done {
+		return nil, user.ErrUserAdminNotFound
+	}
+	if err = doc.DataTo(&userDAO); err != nil {
+		return nil, user.ErrUserAdminNotFound
+	}
+	user := &user.UserRole{
+		Role: userDAO.Role,
+	}
+	return user, nil
 }
 
 func incrementCounterProduct(doc *firestore.DocumentSnapshot) {

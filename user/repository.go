@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	collectionName = "users"
+	CollectionName = "users"
 )
 
 var (
@@ -28,7 +28,7 @@ func NewRepository(firestoreClient *firestore.Client) *repository {
 }
 func (r *repository) Save(data *User) error {
 	ctx := context.Background()
-	_, _, err := r.FirestoreClient.Collection(collectionName).Add(ctx, data.toInterface())
+	_, _, err := r.FirestoreClient.Collection(CollectionName).Add(ctx, data.toInterface())
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (r *repository) GetRoleUser(email string) (*UserRole, error) {
 	)
 	const whereKey = "user_email"
 
-	iter := r.FirestoreClient.Collection(collectionName).Where(whereKey, "==", email).Documents(ctx)
+	iter := r.FirestoreClient.Collection(CollectionName).Where(whereKey, "==", email).Documents(ctx)
 	doc, err := iter.Next()
 	if err == iterator.Done {
 		return nil, ErrUserAdminNotFound
@@ -57,6 +57,7 @@ func (r *repository) GetRoleUser(email string) (*UserRole, error) {
 	}
 	return user, nil
 }
+
 func (r *repository) GetUserByEmail(email string) (*User, error) {
 	ctx := context.Background()
 
@@ -65,7 +66,7 @@ func (r *repository) GetUserByEmail(email string) (*User, error) {
 	)
 	const whereKey = "user_email"
 
-	iter := r.FirestoreClient.Collection(collectionName).Where(whereKey, "==", email).Documents(ctx)
+	iter := r.FirestoreClient.Collection(CollectionName).Where(whereKey, "==", email).Documents(ctx)
 	doc, err := iter.Next()
 	if err == iterator.Done {
 		return nil, ErrUserNotFound
@@ -87,7 +88,7 @@ func (r *repository) DeleteUser(email string) error {
 
 	const whereKey = "user_email"
 
-	collection := r.FirestoreClient.Collection(collectionName)
+	collection := r.FirestoreClient.Collection(CollectionName)
 	iter := collection.Where(whereKey, "==", email).Documents(ctx)
 	docRef, err := iter.Next()
 	if err == iterator.Done {
@@ -108,7 +109,7 @@ func (r *repository) UpdateUser(user *User) (*User, error) {
 
 	ctx := context.Background()
 
-	iter := r.FirestoreClient.Collection(collectionName).Where("user_email", "==", user.Email).Documents(ctx)
+	iter := r.FirestoreClient.Collection(CollectionName).Where("user_email", "==", user.Email).Documents(ctx)
 
 	doc, err := iter.Next()
 
@@ -137,7 +138,7 @@ func (r *repository) GetAllAdmins() ([]*User, error) {
 	const whereKey = "user_role"
 	const roleAdmin = "admin"
 
-	iter := r.FirestoreClient.Collection(collectionName).Where(whereKey, "==", roleAdmin).Documents(ctx)
+	iter := r.FirestoreClient.Collection(CollectionName).Where(whereKey, "==", roleAdmin).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {

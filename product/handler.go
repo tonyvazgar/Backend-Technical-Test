@@ -2,11 +2,14 @@ package product
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"encore.app/shared"
 	"github.com/go-playground/validator/v10"
 
 	"encore.app/infrastructure"
+	user "encore.app/user"
 	"encore.dev/beta/errs"
 )
 
@@ -14,6 +17,8 @@ type repositoryI interface {
 	GetProductBySKU(productSKU string) (*Product, error)
 	Save(data *Product) error
 	Delete(uuid string) error
+	GetRoleUser(email string) (*user.UserRole, error)
+	GetAllProducts() ([]*Product, error)
 }
 type apiValidator interface {
 	Validate(i interface{}) error
@@ -61,14 +66,46 @@ func (s *Service) GetProductSku(ctx context.Context, sku string) (*ProductDTO, e
 	return toProductDTO(finalResponse), nil
 }
 
+//encore:api public method=POST path=/products
+func (s *Service) GetAllProducts(ctx context.Context, dto *ProductsGetDTO) (*ProductsDTO, error) {
+
+	fmt.Println("//////", dto.Email)
+	cntvw, err := s.repository.GetRoleUser(dto.Email)
+	if err != nil {
+		return nil, user.ErrUserAdminNotFound
+	}
+	if cntvw.Role != "admin" {
+		return nil, errors.New("INSUFICIENT_PERMISIONS")
+	}
+
+	products, error := s.repository.GetAllProducts()
+	if error != nil {
+		return nil, ErrProductNotFound
+	}
+
+	response := &ProductsDTO{
+		Products: toProductDTOs(products),
+	}
+
+	return response, nil
+}
+
 //encore:api public method=POST path=/product
-func (s *Service) SaveProduct(ctx context.Context, dto *ProductDTO) error {
+func (s *Service) SaveProduct(ctx context.Context, dto *ProductSaveDTO) error {
 	err := s.validator.Validate(dto)
 	if err != nil {
 		return s.validator.ParseValidatorError(err)
 	}
 
 	context.Background()
+
+	cntvw, err := s.repository.GetRoleUser(dto.AdminEmail)
+	if err != nil {
+		return user.ErrUserAdminNotFound
+	}
+	if cntvw.Role != "admin" {
+		return errors.New("INSUFICIENT_PERMISIONS")
+	}
 
 	productToInsert := generateProductToSave(dto)
 
@@ -77,15 +114,6 @@ func (s *Service) SaveProduct(ctx context.Context, dto *ProductDTO) error {
 	if err != nil {
 		return handleAPIErrors(err)
 	}
-
-	// responseFoundProduct := &GetCounterViewResponseDTO{
-	// 	CounterView: toCounterViewDTO(cntvw),
-	// }
-	// _, err = s.repository.UpdateViewsProduct(responseFoundProduct.CounterView.UUID)
-	// if err != nil {
-	// 	return handleAPIErrors(err)
-	// }
-
 	return nil
 }
 
@@ -94,7 +122,14 @@ func (s *Service) DeleteProduct(ctx context.Context, data *ProductDeleteDTO) err
 
 	context.Background()
 
-	err := s.repository.Delete(data.UUID)
+	cntvw, err := s.repository.GetRoleUser(data.AdminEmail)
+	if err != nil {
+		return user.ErrUserAdminNotFound
+	}
+	if cntvw.Role != "admin" {
+		return errors.New("INSUFICIENT_PERMISIONS")
+	}
+	err = s.repository.Delete(data.UUID)
 	if err != nil {
 		return err
 	}
