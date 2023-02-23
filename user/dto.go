@@ -46,7 +46,7 @@ type UseRequestDeleteDTO struct {
 }
 type UseRequestUpdateDTO struct {
 	AdminEmail    string `json:"user_email_request"`
-	EmailToSearch string `json:"user_email_to_delete"`
+	EmailToSearch string `json:"user_email_to_search"`
 	Name          string `json:"user_name_to_update"`
 }
 

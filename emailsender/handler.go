@@ -54,7 +54,7 @@ func initService() (*Service, error) {
 }
 
 //encore:api public method=GET path=/emailsender/send
-func (s *Service) sendEmail(ctx context.Context, data *TemplateParams) error {
+func (s *Service) SendEmail(ctx context.Context, data *TemplateParams) error {
 
 	client := s.sling.sling.New()
 
@@ -100,7 +100,7 @@ func (s *Service) SendEmaiAllAdmins(ctx context.Context, data *ListEmails) error
 			Message:  "Hola, informamos que uno de los productos fue actualizado por otro admin, verificalo.",
 			UserMail: value.UserMail,
 		}
-		sendEmail(ctx, &templateParams)
+		SendEmail(ctx, &templateParams)
 	}
 
 	return nil

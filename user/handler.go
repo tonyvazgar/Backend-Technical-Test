@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	emailsender "encore.app/emailsender"
 	"encore.app/infrastructure"
 	"encore.app/shared"
 	"encore.dev/beta/errs"
@@ -81,6 +82,19 @@ func (s *Service) CreateUser(ctx context.Context, dto *UserCreateRequestDTO) err
 		return handleAPIErrors(err)
 	}
 
+	sendData := &emailsender.TemplateParams{
+		ToName:   dto.Name,
+		FromName: "Tony",
+		Message:  "Bienvenido al sistema!",
+		UserMail: dto.Email,
+	}
+	errorEmail := emailsender.SendEmail(ctx, sendData)
+	if errorEmail != nil {
+		return &errs.Error{
+			Code:    errs.Internal,
+			Message: "Internal server error",
+		}
+	}
 	return nil
 }
 
@@ -154,6 +168,10 @@ func (s *Service) DeleteUser(ctx context.Context, dto *UseRequestDeleteDTO) erro
 	cntvw, err := s.repository.GetRoleUser(dto.AdminEmail)
 	if err != nil {
 		return ErrUserAdminNotFound
+	}
+
+	if dto.AdminEmail == dto.EmailToDelete {
+		return errors.New("CANNOT_DELETE_YOURLSELF")
 	}
 
 	if cntvw.Role != "admin" {

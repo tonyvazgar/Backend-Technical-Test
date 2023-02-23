@@ -101,7 +101,7 @@ func (s *Service) GetAllProducts(ctx context.Context, dto *ProductsGetDTO) (*Pro
 }
 
 //encore:api public method=POST path=/product
-func (s *Service) SaveProduct(ctx context.Context, dto *ProductSaveDTO) error {
+func (s *Service) CreateProduct(ctx context.Context, dto *ProductSaveDTO) error {
 	err := s.validator.Validate(dto)
 	if err != nil {
 		return s.validator.ParseValidatorError(err)
