@@ -1,14 +1,5 @@
 package product
 
-type ProductDAO struct {
-	UUID         string `firestore:"UUID"`
-	SKU          string `firestore:"product_sku"`
-	Name         string `firestore:"product_name"`
-	Price        int32  `firestore:"product_price"`
-	Brand        string `firestore:"product_brand"`
-	QueryCounter int32  `firestore:"query_counter"`
-}
-
 type ProductDTO struct {
 	AdminEmail   string `json:"user_email_request"`
 	UUID         string `json:"UUID"`
@@ -45,6 +36,18 @@ type ProductsGetDTO struct {
 type ProductDeleteDTO struct {
 	AdminEmail string `json:"user_email_request"`
 	UUID       string `json:"uuid"`
+}
+type ProductGetSKUDTO struct {
+	Email string `json:"user_email_request"`
+	SKU   string `json:"product_sku"`
+}
+
+type ProductRequestUpdateDTO struct {
+	Email        string `json:"user_email_request"`
+	UUIDToSearch string `json:"uuid_to_update"`
+	Name         string `json:"name_to_update"`
+	Price        int32  `json:"price_to_update"`
+	Brand        string `json:"brand_to_update"`
 }
 
 func toProductDTO(data *Product) *ProductDTO {

@@ -15,6 +15,8 @@ import (
 
 type repositoryI interface {
 	GetProductBySKU(productSKU string) (*Product, error)
+	GetProductByUUID(uuid string) (*Product, error)
+	UpdateProduct(product *Product) (*Product, error)
 	Save(data *Product) error
 	Delete(uuid string) error
 	GetRoleUser(email string) (*user.UserRole, error)
@@ -46,21 +48,27 @@ func initService() (*Service, error) {
 	}, nil
 }
 
-//encore:api public method=GET path=/product/:sku
-func (s *Service) GetProductSku(ctx context.Context, sku string) (*ProductDTO, error) {
-
-	cntvw, err := s.repository.GetProductBySKU(sku)
+//encore:api public method=POST path=/product/get
+func (s *Service) GetProductBySku(ctx context.Context, data *ProductGetSKUDTO) (*ProductDTO, error) {
+	cntvw, err := s.repository.GetRoleUser(data.Email)
 	if err != nil {
+		return nil, user.ErrUserAdminNotFound
+	}
+	if cntvw.Role != "admin" {
+		return nil, errors.New("INSUFICIENT_PERMISIONS")
+	}
+	cntvwproduct, errproduct := s.repository.GetProductBySKU(data.SKU)
+	if errproduct != nil {
 		return nil, ErrProductNotFound
 	}
 
 	finalResponse := &Product{
-		UUID:         cntvw.UUID,
-		SKU:          cntvw.SKU,
-		Name:         cntvw.Name,
-		Price:        cntvw.Price,
-		Brand:        cntvw.Brand,
-		QueryCounter: cntvw.QueryCounter,
+		UUID:         cntvwproduct.UUID,
+		SKU:          cntvwproduct.SKU,
+		Name:         cntvwproduct.Name,
+		Price:        cntvwproduct.Price,
+		Brand:        cntvwproduct.Brand,
+		QueryCounter: cntvwproduct.QueryCounter,
 	}
 
 	return toProductDTO(finalResponse), nil
@@ -134,6 +142,52 @@ func (s *Service) DeleteProduct(ctx context.Context, data *ProductDeleteDTO) err
 		return err
 	}
 
+	return nil
+}
+
+//encore:api public method=POST path=/product/update
+func (s *Service) UpdateProduct(ctx context.Context, dto *ProductRequestUpdateDTO) error {
+	err := s.validator.Validate(dto)
+	if err != nil {
+		return s.validator.ParseValidatorError(err)
+	}
+
+	cntvw, err := s.repository.GetRoleUser(dto.Email)
+	if err != nil {
+		return user.ErrUserAdminNotFound
+	}
+
+	if cntvw.Role != "admin" {
+		return errors.New("INSUFICIENT_PERMISIONS")
+	}
+
+	context.Background()
+
+	user, err := s.repository.GetProductByUUID(dto.UUIDToSearch)
+
+	if err != nil {
+		return &errs.Error{
+			Code:    errs.NotFound,
+			Message: "No product was found",
+		}
+	}
+	if dto.Brand != "" {
+		user.Brand = dto.Brand
+	}
+	if dto.Name != "" {
+		user.Name = dto.Name
+	}
+	if dto.Price != 0 {
+		user.Price = dto.Price
+	}
+	user, err = s.repository.UpdateProduct(user)
+
+	if err != nil {
+		return &errs.Error{
+			Code:    errs.Internal,
+			Message: "Internal server error",
+		}
+	}
 	return nil
 }
 

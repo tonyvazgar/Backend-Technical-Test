@@ -70,6 +70,38 @@ func (r *repository) GetProductBySKU(productSKU string) (*Product, error) {
 	return &product, nil
 }
 
+func (r *repository) GetProductByUUID(uuid string) (*Product, error) {
+	ctx := context.Background()
+	var (
+		productDAO *ProductDAO
+		product    Product
+	)
+	const whereKey = "UUID"
+
+	iter := r.FirestoreClient.Collection(collectionName).Where(whereKey, "==", uuid).Documents(ctx)
+	doc, err := iter.Next()
+	if err != nil {
+		return nil, ErrProductNotFound
+	}
+
+	incrementCounterProduct(doc)
+
+	if err = doc.DataTo(&productDAO); err != nil {
+		return nil, err
+	}
+
+	product = Product{
+		UUID:         productDAO.UUID,
+		SKU:          productDAO.SKU,
+		Name:         productDAO.Name,
+		Price:        productDAO.Price,
+		Brand:        productDAO.Brand,
+		QueryCounter: productDAO.QueryCounter,
+	}
+
+	return &product, nil
+}
+
 func (r *repository) GetAllProducts() ([]*Product, error) {
 	ctx := context.Background()
 	const whereKey = "user_id" // Using userID as it comes from the legacy tables
@@ -138,35 +170,28 @@ func incrementCounterProduct(doc *firestore.DocumentSnapshot) {
 	})
 }
 
-// func (r *repository) UpdateViewsProduct(productID string) (*Product, error) {
-// 	var cw *Product
-// 	const whereKey = "UUID"
-// 	ctx := context.Background()
+func (r *repository) UpdateProduct(user *Product) (*Product, error) {
+	var userDAO *ProductDAO
 
-// 	iter := r.FirestoreClient.Collection(collectionName).Where(whereKey, "==", productID).Documents(ctx)
-// 	for {
-// 		docs, err := iter.Next()
-// 		if err == iterator.Done {
-// 			break
-// 		}
-// 		if err != nil {
-// 			return nil, err
-// 		}
+	ctx := context.Background()
 
-// 		data := docs.Data()
-// 		cw = newCounterViewFromMap(data)
+	iter := r.FirestoreClient.Collection(collectionName).Where("UUID", "==", user.UUID).Documents(ctx)
 
-// 		_, err = docs.Ref.Update(ctx, []firestore.Update{
-// 			{Path: "counter", Value: firestore.Increment(1)},
-// 		})
-// 	}
+	doc, err := iter.Next()
 
-// 	if cw == nil {
-// 		return nil, ErrCounterViewNotFound
-// 	}
+	if err != nil {
+		return nil, ErrProductNotFound
+	}
 
-// 	return cw, nil
-// }
+	toUpdate := user.toInterface()
+	doc.Ref.Set(ctx, toUpdate)
+
+	if err := doc.DataTo(&userDAO); err != nil {
+		return nil, err
+	}
+
+	return toDomain(userDAO), nil
+}
 
 func (f *repository) Delete(uuid string) error {
 
