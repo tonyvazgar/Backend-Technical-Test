@@ -23,12 +23,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/users/create",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/users/create",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"users",
 								"create"
@@ -52,12 +53,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/users/get",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/users/get",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"users",
 								"get"
@@ -81,12 +83,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/users/getAllUsers",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/users/getAllUsers",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"users",
 								"getAllUsers"
@@ -110,12 +113,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/users/update",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/users/update",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"users",
 								"update"
@@ -139,12 +143,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/users/delete",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/users/delete",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"users",
 								"delete"
@@ -173,12 +178,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/product",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/product",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"product"
 							]
@@ -201,12 +207,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/products",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/products",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"products"
 							]
@@ -221,7 +228,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_email_request\": \"tonyvazgar@icloud.com\",\n    \"product_sku\": \"XYZ12345\"\n}",
+							"raw": "{\n    \"user_email_request\": \"tonyvazgar@icloud.com\",\n    \"product_sku\": \"LSFLKDS\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -229,12 +236,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/product/get",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/product/get",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"product",
 								"get"
@@ -258,12 +266,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/product/update",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/product/update",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"product",
 								"update"
@@ -279,7 +288,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_email_request\": \"tonyvazgar@icloud.com\",\n    \"uuid\": \"4e3e9692-5e8b-43de-a68f-423aa727c51f\"\n}",
+							"raw": "{\n    \"user_email_request\": \"tonyvazgar@icloud.com\",\n    \"uuid\": \"e1fa2bda-044a-46d2-b538-d6142dc099dd\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -287,12 +296,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/product/delete",
-							"protocol": "http",
+							"raw": "https://staging-zebrands-zuu2.encr.app/product/delete",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"staging-zebrands-zuu2",
+								"encr",
+								"app"
 							],
-							"port": "4000",
 							"path": [
 								"product",
 								"delete"
