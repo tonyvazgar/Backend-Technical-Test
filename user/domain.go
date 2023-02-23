@@ -12,6 +12,10 @@ type User struct {
 	Email string
 	Role  string
 }
+type UserEmailName struct {
+	Name  string
+	Email string
+}
 
 type UserRole struct {
 	Role string

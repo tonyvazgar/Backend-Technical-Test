@@ -104,7 +104,7 @@ func (r *repository) GetProductByUUID(uuid string) (*Product, error) {
 
 func (r *repository) GetAllProducts() ([]*Product, error) {
 	ctx := context.Background()
-	const whereKey = "user_id" // Using userID as it comes from the legacy tables
+
 	var (
 		products   []*Product
 		product    *Product
@@ -148,7 +148,6 @@ func (r *repository) GetRoleUser(email string) (*user.UserRole, error) {
 	)
 	const whereKey = "user_email"
 
-	fmt.Println("//////", whereKey, "==", email)
 	iter := r.FirestoreClient.Collection(user.CollectionName).Where(whereKey, "==", email).Documents(ctx)
 	doc, err := iter.Next()
 	if err == iterator.Done {
@@ -161,6 +160,42 @@ func (r *repository) GetRoleUser(email string) (*user.UserRole, error) {
 		Role: userDAO.Role,
 	}
 	return user, nil
+}
+
+func (r *repository) GetAllUsersAdmins() ([]*user.UserEmailName, error) {
+	ctx := context.Background()
+
+	var (
+		products   []*user.UserEmailName
+		product    *user.UserEmailName
+		productDAO *user.UserDAO
+	)
+	whereKey := "user_role"
+	iter := r.FirestoreClient.Collection(user.CollectionName).Where(whereKey, "==", "admin").Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+
+		if err = doc.DataTo(&productDAO); err != nil {
+			return nil, err
+		}
+
+		fmt.Println("!!!!!", productDAO)
+		product = &user.UserEmailName{
+			Name:  productDAO.Name,
+			Email: productDAO.Email,
+		}
+		fmt.Println("????", product)
+		products = append(products, product)
+	}
+
+	if products == nil {
+		return nil, user.ErrUserNotFound
+	}
+
+	return products, nil
 }
 
 func incrementCounterProduct(doc *firestore.DocumentSnapshot) {

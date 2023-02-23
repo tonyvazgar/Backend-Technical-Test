@@ -8,6 +8,7 @@ import (
 	"encore.app/shared"
 	"github.com/go-playground/validator/v10"
 
+	emailsender "encore.app/emailsender"
 	"encore.app/infrastructure"
 	user "encore.app/user"
 	"encore.dev/beta/errs"
@@ -20,6 +21,7 @@ type repositoryI interface {
 	Save(data *Product) error
 	Delete(uuid string) error
 	GetRoleUser(email string) (*user.UserRole, error)
+	GetAllUsersAdmins() ([]*user.UserEmailName, error)
 	GetAllProducts() ([]*Product, error)
 }
 type apiValidator interface {
@@ -163,7 +165,7 @@ func (s *Service) UpdateProduct(ctx context.Context, dto *ProductRequestUpdateDT
 
 	context.Background()
 
-	user, err := s.repository.GetProductByUUID(dto.UUIDToSearch)
+	myUser, err := s.repository.GetProductByUUID(dto.UUIDToSearch)
 
 	if err != nil {
 		return &errs.Error{
@@ -172,17 +174,43 @@ func (s *Service) UpdateProduct(ctx context.Context, dto *ProductRequestUpdateDT
 		}
 	}
 	if dto.Brand != "" {
-		user.Brand = dto.Brand
+		myUser.Brand = dto.Brand
 	}
 	if dto.Name != "" {
-		user.Name = dto.Name
+		myUser.Name = dto.Name
 	}
 	if dto.Price != 0 {
-		user.Price = dto.Price
+		myUser.Price = dto.Price
 	}
-	user, err = s.repository.UpdateProduct(user)
+	myUser, err = s.repository.UpdateProduct(myUser)
 
 	if err != nil {
+		return &errs.Error{
+			Code:    errs.Internal,
+			Message: "Internal server error",
+		}
+	}
+
+	admins, errors := s.repository.GetAllUsersAdmins()
+	if errors != nil {
+		return user.ErrUserNotFound
+	}
+	var dataWapped []emailsender.ParamsListEmail
+	for i := 0; i < len(admins); i++ {
+		oneAdmin := admins[i]
+		data := emailsender.ParamsListEmail{
+			ToName:   oneAdmin.Name,
+			UserMail: oneAdmin.Email,
+		}
+		fmt.Println("----->>>>", data)
+		dataWapped = append(dataWapped, data)
+	}
+	fmt.Println("----->>>>", dataWapped)
+	sendData := &emailsender.ListEmails{
+		Emails: dataWapped,
+	}
+	errorEmail := emailsender.SendEmaiAllAdmins(ctx, sendData)
+	if errorEmail != nil {
 		return &errs.Error{
 			Code:    errs.Internal,
 			Message: "Internal server error",

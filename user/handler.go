@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"encore.app/infrastructure"
 	"encore.app/shared"
@@ -16,6 +17,7 @@ type repositoryI interface {
 	GetUserByEmail(email string) (*User, error)
 	DeleteUser(email string) error
 	UpdateUser(user *User) (*User, error)
+	GetAllUsers() ([]*User, error)
 }
 
 type apiValidator interface {
@@ -106,6 +108,30 @@ func (s *Service) GetUser(ctx context.Context, dto *UseRequestDTO) (*UserDTO, er
 	}
 
 	return toUserDTO(cntvwe), nil
+}
+
+//encore:api public method=POST path=/users/getAllUsers
+func (s *Service) GetAllUsers(ctx context.Context, dto *UsersGetDTO) (*UsersDTO, error) {
+
+	fmt.Println("//////", dto.Email)
+	cntvw, err := s.repository.GetRoleUser(dto.Email)
+	if err != nil {
+		return nil, ErrUserAdminNotFound
+	}
+	if cntvw.Role != "admin" {
+		return nil, errors.New("INSUFICIENT_PERMISIONS")
+	}
+
+	products, error := s.repository.GetAllUsers()
+	if error != nil {
+		return nil, ErrUserNotFound
+	}
+
+	response := &UsersDTO{
+		Users: toUsersDTOs(products),
+	}
+
+	return response, nil
 }
 
 // ==================================================================

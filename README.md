@@ -1,4 +1,8 @@
 # Backend-Technical-Test
+-----------
+
+## API BASE URL
+https://staging-zebrands-zuu2.encr.app
 
 # Description of the task
 

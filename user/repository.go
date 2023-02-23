@@ -17,16 +17,16 @@ var (
 	ErrUserAdminNotFound = errors.New("INSUFICIENT_PERMISIONS")
 )
 
-type repository struct {
+type Repository struct {
 	FirestoreClient *firestore.Client
 }
 
-func NewRepository(firestoreClient *firestore.Client) *repository {
-	return &repository{
+func NewRepository(firestoreClient *firestore.Client) *Repository {
+	return &Repository{
 		FirestoreClient: firestoreClient,
 	}
 }
-func (r *repository) Save(data *User) error {
+func (r *Repository) Save(data *User) error {
 	ctx := context.Background()
 	_, _, err := r.FirestoreClient.Collection(CollectionName).Add(ctx, data.toInterface())
 	if err != nil {
@@ -36,7 +36,7 @@ func (r *repository) Save(data *User) error {
 	return nil
 }
 
-func (r *repository) GetRoleUser(email string) (*UserRole, error) {
+func (r *Repository) GetRoleUser(email string) (*UserRole, error) {
 	ctx := context.Background()
 
 	var (
@@ -58,7 +58,7 @@ func (r *repository) GetRoleUser(email string) (*UserRole, error) {
 	return user, nil
 }
 
-func (r *repository) GetUserByEmail(email string) (*User, error) {
+func (r *Repository) GetUserByEmail(email string) (*User, error) {
 	ctx := context.Background()
 
 	var (
@@ -83,7 +83,7 @@ func (r *repository) GetUserByEmail(email string) (*User, error) {
 	return user, nil
 }
 
-func (r *repository) DeleteUser(email string) error {
+func (r *Repository) DeleteUser(email string) error {
 	ctx := context.Background()
 
 	const whereKey = "user_email"
@@ -104,7 +104,7 @@ func (r *repository) DeleteUser(email string) error {
 	return nil
 }
 
-func (r *repository) UpdateUser(user *User) (*User, error) {
+func (r *Repository) UpdateUser(user *User) (*User, error) {
 	var userDAO *UserDAO
 
 	ctx := context.Background()
@@ -127,7 +127,44 @@ func (r *repository) UpdateUser(user *User) (*User, error) {
 	return toDomain(userDAO), nil
 }
 
-func (r *repository) GetAllAdmins() ([]*User, error) {
+func (r *Repository) GetAllUsers() ([]*User, error) {
+	ctx := context.Background()
+
+	var (
+		products   []*User
+		product    *User
+		productDAO *UserDAO
+	)
+
+	iter := r.FirestoreClient.Collection(CollectionName).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+
+		if err = doc.DataTo(&productDAO); err != nil {
+			return nil, err
+		}
+
+		product = &User{
+			UUID:  productDAO.UUID,
+			Name:  productDAO.Name,
+			Email: productDAO.Email,
+			Role:  productDAO.Role,
+		}
+
+		products = append(products, product)
+	}
+
+	if products == nil {
+		return nil, ErrUserNotFound
+	}
+
+	return products, nil
+}
+
+func (r *Repository) GetAllAdmins() ([]*User, error) {
 	ctx := context.Background()
 
 	var (

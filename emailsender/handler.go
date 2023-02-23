@@ -88,7 +88,7 @@ func (s *Service) sendEmail(ctx context.Context, data *TemplateParams) error {
 }
 
 //encore:api public method=POST path=/emailsender/send/admin
-func (s *Service) sendEmaiAllAdmins(ctx context.Context, data *ListEmails) error {
+func (s *Service) SendEmaiAllAdmins(ctx context.Context, data *ListEmails) error {
 
 	// res, err := client.Get(urlSendEmail).QueryStruct(params).Receive(responseData, responseError)
 
