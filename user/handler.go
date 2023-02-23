@@ -108,6 +108,16 @@ func (s *Service) GetUser(ctx context.Context, dto *UseRequestDTO) (*UserDTO, er
 	return toUserDTO(cntvwe), nil
 }
 
+// ==================================================================
+
+// Delete a user by uuid, send the email from the user to see if the request
+// can be success:
+//
+//	 curl 'https://staging-zebrands-zuu2.encr.app/product/delete' -d '{
+//	    "user_email_request": "example@me.com",
+//	    "uuid": "uuid_product"
+//	}'
+//
 //encore:api public method=POST path=/users/delete
 func (s *Service) DeleteUser(ctx context.Context, dto *UseRequestDeleteDTO) error {
 	err := s.validator.Validate(dto)
