@@ -4,6 +4,31 @@
 ## API BASE URL
 https://staging-zebrands-zuu2.encr.app
 
+## Stack
+I decided to do it with: 
+<ul>
+<li>
+Firebase: Store the data
+</li>
+
+<li>
+Golang: Backend Language
+</li>
+
+<li>
+Encore: https://encore.dev Platform to Deploy, maintain, escalate microservices
+</li>
+
+<li>
+EmailJs: Service that allows send emails easy
+</li>
+
+</ul>
+
+## WHY
+
+I decided such technologies because is the thing what Im working on it since one month ago. I like it because my learning curve is low (one month ago I didn't know ANYTHING about Go and Encore, NOTHING).
+
 # Description of the task
 
 We need to build a basic catalog system to manage _products_. A _product_ should have basic info such as sku, name, price and brand.
