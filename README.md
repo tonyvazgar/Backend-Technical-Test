@@ -27,8 +27,13 @@ EmailJs: Service that allows send emails easy
 
 ## WHY
 
-I decided such technologies because is the thing what Im working on it since one month ago. I like it because my learning curve is low (one month ago I didn't know ANYTHING about Go and Encore, NOTHING).
+I decided such technologies because it is what I have been working on for a month and it is fresh in my mind. I like it because my learning curve is low (a month ago I knew NOTHING about Go and Encore, NOTHING 🤯).
 
+## INFO
+![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.35%20p.m..png)
+![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.43%20p.m..png)
+![Documentation](https://github.com/tonyvazgar/Backend-Technical-Test/blob/main/img/Screenshot%202023-02-23%20at%2012.03.51%20p.m..png)
+------------------------------------------------------------------------------------
 # Description of the task
 
 We need to build a basic catalog system to manage _products_. A _product_ should have basic info such as sku, name, price and brand.
